@@ -20,14 +20,14 @@ function mapSetup(){
     const a=ll(metres-30),b=ll(metres+30),heading=Math.atan2((b[1]-a[1])*Math.cos(a[0]*Math.PI/180),b[0]-a[0])*180/Math.PI;
     L.marker(ll(metres),{interactive:false,keyboard:false,zIndexOffset:-500,icon:L.divIcon({className:'course-direction',html:`<svg viewBox="0 0 20 20" style="transform:rotate(${heading}deg)" aria-hidden="true"><path d="M5 13l5-6 5 6" fill="none" stroke="#fffdf5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`,iconSize:[20,20],iconAnchor:[10,10]})}).addTo(map);
   }
-  const fit=()=>map.fitBounds(route.getBounds(),{paddingTopLeft:[35,90],paddingBottomRight:[45,90]});$('fit').onclick=()=>{following=false;fit();};fit();
+  const fit=()=>map.fitBounds(route.getBounds(),{paddingTopLeft:[48,95],paddingBottomRight:[48,100]});$('fit').onclick=()=>{following=false;fit();};fit();
   L.control.zoom({position:'bottomright'}).addTo(map);
   course.timelines.filter(t=>t.type!=='split'||t.distance_from_start%5000===0).forEach(t=>{
     const special=t.type==='start'||t.type==='finish';
     const label=t.type==='start'?'START':t.type==='finish'?'FINISH':t.distance_from_start/1000;
     L.marker([t.latitude,t.longitude],{icon:L.divIcon({className:special?'start-pin':'checkpoint',html:String(label),iconSize:special?[43,22]:[22,22],iconAnchor:special?[21,11]:[11,11]})}).bindTooltip(`${escape(t.name)} · ${(t.distance_from_start/1000).toFixed(1)} km`).addTo(map);
   });
-  map.on('resize',()=>{if(!following||!runnerMarker)fit();});
+  map.on('resize',fit);
   map.on('dragstart',()=>{following=false;$('follow').textContent='◎';$('follow').setAttribute('aria-pressed','false');});
 }
 function showResults(items,query,total){
@@ -99,7 +99,7 @@ function renderRunner(){
     runnerMarker.bindPopup(content);
     const element=runnerMarker.getElement();if(element){element.dataset.distance=String(markerDistance);element.dataset.source=state;}
     if(parked){$('runner-state').textContent=Date.now()<START?'Parked at start · race pending':'No position yet · icon at start';$('runner-state').title=content.textContent;}
-    if(following&&!map.getBounds().pad(-.2).contains(location))map.panTo(location,{animate:true});
+    if(following&&!parked&&!map.getBounds().pad(-.2).contains(location))map.panTo(location,{animate:true});
   }else if(runnerMarker){runnerMarker.remove();runnerMarker=null;mascotKey='';}
   if(measuredMarker){measuredMarker.remove();measuredMarker=null;}
   if(p.kind==='estimated'&&!staleFeed){measuredMarker=L.circleMarker(ll(p.measured),{radius:6,color:'#33294b',fillColor:'#ffdc62',fillOpacity:1,weight:2}).bindTooltip(`Last chip read: ${escape(p.checkpoint)} · ${clock(p.time)}`).addTo(map);}
