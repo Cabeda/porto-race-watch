@@ -10,10 +10,10 @@ function toast(message){$('toast').textContent=message;$('toast').classList.add(
 function pin(className,label,size=32){return L.divIcon({className:'',html:`<div class="map-pin ${className}" style="width:${size}px;height:${size}px">${escape(label)}</div>`,iconSize:[size,size],iconAnchor:[size/2,size/2]});}
 function ll(m){const p=routePoint(course,m);return [p[1],p[0]];}
 function mapSetup(){
-  map=L.map('map',{zoomControl:false,scrollWheelZoom:true}).setView([41.164,-8.66],12);
+  map=L.map('map',{zoomControl:false,scrollWheelZoom:true,zoomSnap:0.25}).setView([41.164,-8.66],12);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',maxZoom:19}).addTo(map);
   const route=L.geoJSON(course.route,{style:{color:'#63735e',weight:4,opacity:.8,lineCap:'round'}}).addTo(map);
-  const fit=()=>map.fitBounds(route.getBounds(),{paddingTopLeft:[35,130],paddingBottomRight:[35,100]});$('fit').onclick=()=>{following=false;fit();};fit();
+  const fit=()=>map.fitBounds(route.getBounds(),{paddingTopLeft:[20,130],paddingBottomRight:[20,80]});$('fit').onclick=()=>{following=false;fit();};fit();
   L.control.zoom({position:'bottomleft'}).addTo(map);
   course.timelines.filter(t=>t.type!=='split'||t.distance_from_start%5000===0).forEach(t=>{
     const special=t.type==='start'||t.type==='finish';
@@ -61,7 +61,7 @@ function renderRunner(){
     $('runner-meta').textContent=[runner.start_number?`Bib ${runner.start_number}`:'Bib pending',runner.category,'Porto Marathon'].filter(Boolean).join(' · ');
   }
   const staleFeed=lastGood&&Date.now()-lastGood>180000&&Date.now()>START;
-  const descriptions={unresolved:'Bib 6297 is not published yet. Search by name below and select a matching entry. Identical names may need a bib to confirm.',waiting:'Waiting for the first confirmed chip read. No position is available yet.',estimated:p.capped?'Estimated at the next checkpoint · awaiting a new chip read.':'Estimated from the last chip read. Position between checkpoints is not live GPS.',checkpoint:'Showing the last confirmed checkpoint. No position estimate available.',stale:'Next read is overdue. Showing the last confirmed checkpoint.',finished:'Across the line. Official finish recorded.',did_not_finish:'Did not finish · last confirmed checkpoint shown.',did_not_start:'Did not start.',disqualified:'Disqualified · last confirmed checkpoint shown.'};
+  const descriptions={unresolved:'Bib 6297 is not published yet. Search by name above and select a matching entry. Identical names may need a bib to confirm.',waiting:'Waiting for the first confirmed chip read. No position is available yet.',estimated:p.capped?'Estimated at the next checkpoint · awaiting a new chip read.':'Estimated from the last chip read. Position between checkpoints is not live GPS.',checkpoint:'Showing the last confirmed checkpoint. No position estimate available.',stale:'Next read is overdue. Showing the last confirmed checkpoint.',finished:'Across the line. Official finish recorded.',did_not_finish:'Did not finish · last confirmed checkpoint shown.',did_not_start:'Did not start.',disqualified:'Disqualified · last confirmed checkpoint shown.'};
   $('runner-note').textContent=staleFeed?'Feed updates are delayed. Showing the last confirmed checkpoint.':descriptions[p.kind];
   $('runner-state').textContent=staleFeed?'Updates delayed':({unresolved:'Select runner',waiting:'Awaiting chip read',estimated:'Estimated position',checkpoint:'Confirmed checkpoint',stale:'Read overdue',finished:'Finished',did_not_finish:'DNF',did_not_start:'DNS',disqualified:'Disqualified'})[p.kind];
   const shown=staleFeed&&p.measured!=null?p.measured:p.distance;
@@ -113,6 +113,7 @@ $('share').onclick=async()=>{try{if(navigator.share)await navigator.share({title
 try{
   course=await fetch('./course.json').then(r=>r.json());mapSetup();
   if(initialId&&/^\d+$/.test(initialId))await selectRunner(initialId,desiredBib);
+  if(matchMedia('(max-width:700px)').matches){$('leader-body').hidden=true;$('leader-toggle').textContent='+';$('leader-toggle').setAttribute('aria-expanded','false');}
   await refresh();tick();
   if(!runner){document.querySelector('.search-panel').open=true;$('search').value='Francisco Silva';await search('Francisco Silva');}
   setInterval(()=>{if(!document.hidden&&Date.now()-lastGood>(Date.now()<START?300000:60000))refresh();},15000);
