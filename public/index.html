@@ -1,38 +1,59 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#f6f5ef"><meta name="description" content="Follow friends at Porto Marathon 2026. Official course, live timing and clearly labelled position estimates.">
-  <title>Porto, together · Race watch</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="Follow a runner at Porto Marathon. Search by name or bib, see the course and follow official timing updates.">
+  <title>Porto · Race watch</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%232c5144'/%3E%3Cpath d='M16 46V18h18a9 9 0 010 18H17' fill='none' stroke='%23e5f0b6' stroke-width='6'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="./vendor/leaflet.css"><link rel="stylesheet" href="./style.css">
-  <script defer src="./vendor/leaflet.js"></script><script type="module" src="./app.mjs"></script>
+  <link rel="stylesheet" href="./vendor/leaflet.css">
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="./vendor/leaflet.js"></script>
+  <script type="module" src="./app.mjs"></script>
 </head>
 <body>
-  <header><a class="brand" href="./"><span class="brand-icon">p.</span>porto, together<span class="edition">RACE WATCH / 2026</span></a><div class="header-actions"><span id="connection" class="status">Connecting</span><button id="share" class="outline">↗ <span>Share the watch</span></button></div></header>
   <main>
-    <aside>
-      <div class="eyebrow">8 NOVEMBER · 08:00 WET</div><h1>Every kilometre.<br>A little closer.</h1><p class="intro">A front-row seat for the people cheering him on.</p>
-      <details class="search-panel" open><summary>Find or change runner <span>⌕</span></summary><form id="search-form"><label for="search">Bib number or registered name</label><div class="search-row"><input id="search" value="6297" maxlength="80" required><button type="submit" class="primary">Find</button></div></form><div id="search-results" aria-live="polite"></div></details>
-      <section class="runner-card">
-        <div class="card-top"><span class="tag">YOUR RUNNER</span><span id="runner-state" class="small">Awaiting identification</span></div>
-        <div class="identity"><div class="avatar" id="initials">FS</div><div><h2 id="runner-name">Francisco Silva</h2><p id="runner-meta">Bib 6297 · Porto Marathon</p></div></div>
-        <p id="runner-note" class="notice">Looking for his official race entry…</p>
-        <div class="big-distance"><span id="distance">—</span><small>/ 42.2 km</small></div><div class="progress"><div id="progress-fill"></div></div>
-        <div class="metrics"><div><label>PACE / KM</label><strong id="pace">—</strong></div><div><label>FINISH EST.</label><strong id="eta">—</strong></div><div><label>OVERALL</label><strong id="position">—</strong></div></div>
-        <button id="follow" class="primary" disabled>◎ &nbsp; Follow on the map</button>
+    <section class="map-panel" aria-label="Porto Marathon course and runner map">
+      <div id="map"></div>
+      <section class="search-panel" aria-label="Find a runner">
+        <form id="search-form" role="search">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <label for="search" class="sr-only">Runner name or bib number</label>
+          <input id="search" type="search" placeholder="Search name or bib number" maxlength="80" autocomplete="off" required>
+          <button type="submit" class="search-submit" aria-label="Search runners">→</button>
+        </form>
+        <div id="search-results" aria-live="polite"></div>
       </section>
-
-      <section class="split-section"><div class="section-title"><h3>The journey so far</h3><span>CHIP TIMING</span></div><div id="splits" class="split-list"><p class="muted">Confirmed splits will appear after he crosses a timing mat.</p></div></section>
-      <div class="aside-footer">Made for the cheering section.<br><a href="https://www.maratonadoporto.com/app-edp-maratona-do-porto-2026/" target="_blank" rel="noopener">Official race app ↗</a> <span>·</span> <button id="about">How tracking works</button></div>
-    </aside>
-    <section class="map-panel" aria-label="Race course and runner map">
-      <div id="map"></div><div class="map-top"><div class="map-caption"><span class="live-dot"></span><div><strong>Porto Marathon</strong><span>42.2 km of city, river & ocean</span></div></div><button class="map-control" id="fit" aria-label="Show full course">⛶</button></div>
-      <div id="countdown-card" class="countdown-card"><span class="eyebrow">THE CITY IS GETTING READY</span><strong id="countdown">Sunday, 8 November</strong><p>The watch starts with the first official timing reads.</p></div>
-      <section class="leaderboard"><div class="leader-header"><div><span class="eyebrow">AT THE FRONT</span><h3>Race leaders <span id="ranking-label">Unofficial</span></h3></div><button id="leader-toggle" aria-expanded="true" aria-label="Toggle leaderboard">−</button></div><div id="leader-body"><div class="tabs" role="group" aria-label="Leaderboard category"><button class="active" data-ranking="25156">Overall</button><button data-ranking="25157">Men</button><button data-ranking="25158">Women</button></div><div id="leaders"><p class="muted">Rankings appear once the race starts.</p></div><p class="leader-foot">Dots use the latest available timing reads.</p></div></section>
-      <div class="map-bottom"><div class="legend"><span><i class="route-key"></i>Official course</span><span><i class="runner-key"></i>Your runner</span><span><i class="leader-key"></i>Leaders</span></div><span id="updated">Waiting for feed</span></div>
+      <div class="corner-controls">
+        <button id="leaderboard-button" class="map-control leaderboard-button" aria-expanded="false" aria-controls="leaderboard" title="Leaderboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 20h16M5 20v-8h5v8m0 0V5h5v15m0 0v-11h4v11"/></svg><span>Leaderboard</span></button>
+        <button class="map-control" id="fit" aria-label="Show full course" title="Show full course">⛶</button>
+      </div>
+      <section class="runner-card" hidden aria-label="Selected runner">
+        <div class="runner-heading"><div><h1 id="runner-name">Runner</h1><span id="runner-meta"></span></div><button id="clear-runner" class="icon-button" aria-label="Clear selected runner" title="Clear runner">×</button></div>
+        <div class="runner-progress"><div class="distance"><strong id="distance">—</strong><span>/ 42.2 km</span></div><div class="eta" id="eta-wrap"><span>Finish est.</span><strong id="eta">—</strong></div></div>
+        <div class="progress"><div id="progress-fill"></div></div>
+        <div class="runner-footer"><span id="runner-state">Waiting for timing</span><div><button id="follow" class="icon-button" aria-label="Follow runner on map" title="Follow runner on map" disabled>◎</button><button id="share" class="icon-button" aria-label="Share this runner" title="Share this runner">↗</button></div></div>
+        <p id="runner-note" class="sr-only"></p><span id="initials" hidden></span><span id="pace" hidden></span><span id="position" hidden></span><div id="splits" hidden></div>
+      </section>
+      <section id="leaderboard" class="leaderboard" hidden aria-label="Race leaderboard">
+        <div class="leader-header"><h2>Leaderboard <span>Provisional</span></h2><button id="leader-toggle" class="icon-button" aria-label="Close leaderboard">×</button></div>
+        <div id="leader-body"><div class="tabs" role="group" aria-label="Leaderboard category"><button class="active" data-ranking="25156">Overall</button><button data-ranking="25157">Men</button><button data-ranking="25158">Women</button></div><div id="leaders"><p class="muted">Rankings appear once the race starts.</p></div></div>
+      </section>
+      <div class="map-footer"><span id="connection" class="connection" title="Timing feed status">Connecting</span><button id="about" aria-label="About timing and position estimates" title="About timing">ⓘ</button><span id="updated" class="sr-only">Waiting for feed</span></div>
+      <div id="countdown-card" hidden><span id="countdown"></span></div>
     </section>
   </main>
-  <dialog id="info"><button id="close-info" class="dialog-close" aria-label="Close">×</button><span class="eyebrow">A LITTLE CONTEXT</span><h2>A dot with an honest label.</h2><p>This page reads the public TRACX timing feed for Porto Marathon 2026. A chip read confirms the runner crossed a particular checkpoint.</p><p>Between reads, we estimate progress along the official course using the speed recorded at the latest checkpoint. This is <b>an estimate, not live GPS</b>. It cannot detect a stop, a pace change or a missed timing mat.</p><p>The estimate stops at the next checkpoint until a new read arrives. If the next read is overdue, the dot returns to the last confirmed checkpoint and is labelled stale. Rankings are provisional.</p><p>Updates run every minute during the race, every five minutes before it, and pause while the page is hidden. Leaders refresh every two minutes. No account or runner phone is needed for chip timing.</p><p><a href="https://tracx.events/en/events/2250" target="_blank" rel="noopener">Open the official event ↗</a></p></dialog>
+  <dialog id="info">
+    <button id="close-info" class="dialog-close icon-button" aria-label="Close">×</button>
+    <h2>About this map</h2>
+    <p>Porto Marathon · 8 November 2026, 08:00 Lisbon time.</p>
+    <p>Chip timing confirms a runner crossing a checkpoint. Between checkpoints, the orange dot estimates progress using the speed from the latest read. <b>It is an estimate, not live GPS.</b></p>
+    <p>Estimates stop at the next checkpoint until another read arrives. An overdue read returns the dot to the last confirmed checkpoint. Green numbered dots show provisional race leaders.</p>
+    <p>Runner timing refreshes every minute during the race, every five minutes beforehand. Leaders refresh every two minutes. Hidden tabs pause updates.</p>
+    <p>Search by registered name or bib and select an entry. Bibs become searchable when the organiser publishes them. Identical names need a bib to confirm identity.</p>
+    <p><a href="https://www.maratonadoporto.com/app-edp-maratona-do-porto-2026/" target="_blank" rel="noopener">Official race app ↗</a></p>
+  </dialog>
   <div id="toast" role="status"></div>
-</body></html>
+</body>
+</html>

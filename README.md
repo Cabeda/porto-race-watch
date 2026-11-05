@@ -1,6 +1,8 @@
 # Porto, together
 
-A simple spectator page for Porto Marathon, 8 November 2026. Official course geometry, incremental name/bib search, selectable runners, chip splits and provisional leaders on a map. No login or backend required.
+A minimal, full-screen spectator map for Porto Marathon, 8 November 2026. Floating name/bib search, a compact selected-runner card, and a leaderboard opened from a corner button. No login or backend required.
+
+[Open the live map](https://porto-race-watch.vercel.app)
 
 ## Run locally
 
