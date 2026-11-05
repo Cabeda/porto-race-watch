@@ -74,3 +74,12 @@ export function routePoint(course, metres) {
   }
   return points.at(-1);
 }
+
+export function markerView(p, { selected, lastUpdate = 0, now = Date.now() }) {
+  const staleFeed = Boolean(selected && lastUpdate && now - lastUpdate > 180000 && now > START && p.kind !== 'finished');
+  const distance = staleFeed && p.measured != null ? p.measured : p.distance;
+  const parked = Boolean(selected && p.kind === 'waiting' && distance == null);
+  const markerDistance = distance ?? (parked ? 0 : null);
+  const source = parked ? 'parked' : staleFeed || p.kind === 'stale' ? 'stale' : p.kind === 'estimated' ? (p.capped ? 'awaiting' : 'estimated') : p.kind === 'finished' ? 'finished' : 'checkpoint';
+  return { staleFeed, distance, parked, markerDistance, source };
+}

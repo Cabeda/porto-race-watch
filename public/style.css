@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
 :root { --ink:#263d35; --muted:#7a857e; --green:#2c5144; --orange:#e78161; --line:#e5e8e3; --shadow:0 2px 6px #18312712,0 8px 28px #18312710; }
 * { box-sizing:border-box; }
@@ -106,3 +107,39 @@ dialog p { color:#65736b; font-size:12px; line-height:1.7; }
   .map-footer { left:14px; bottom:12px; }
   dialog { margin:20px; padding:26px; }
 }
+/* A small amount of nonsense. The timing remains serious. */
+:root { --ink:#33294b; --green:#6950a1; --orange:#f7b95b; --muted:#82798c; --shadow:3px 4px 0 #33294b26,0 6px 18px #33294b10; }
+body { font-family:'Nunito','DM Sans',sans-serif; }
+.search-panel,.runner-card,.leaderboard { background:#fffdf5; border:2px solid #33294b; border-radius:19px 23px 19px 15px; }
+.search-submit { background:#ffdc62; border:1.5px solid #33294b; border-radius:12px; box-shadow:1px 2px 0 #33294b; font-weight:900; }
+.search-submit:hover { background:#ffe88b; }
+.search-icon { font-size:22px; margin:0; }
+#search { font-weight:700; }
+.result:hover { background:#f0e8ff; }
+h1,h2 { font-weight:900; }
+.map-control { border:1.5px solid #33294b; background:#fffdf5; border-radius:15px 13px 16px 12px; }
+.leaderboard-button[aria-expanded=true] { background:#e6dbff; color:#33294b; }
+.tabs { background:#f0eafa; }
+.tabs .active { background:#ffdc62; box-shadow:1px 2px 0 #33294b; font-weight:800; }
+.progress { height:5px; background:#f0eafa; }
+#progress-fill { background:#a283e6; }
+.leaflet-tile-pane { filter:saturate(.12) brightness(1.07); opacity:.77; }
+.checkpoint { background:#fffdf5; border:2px solid #59447d; color:#463160; font-weight:900; box-shadow:1px 1px 0 #33294b33; }
+.start-pin { background:#ffdc62; color:#33294b; border-color:#33294b; font-weight:900; }
+.course-direction { pointer-events:none; }
+.course-direction svg { width:20px; height:20px; display:block; }
+.runner-mascot { position:relative; width:76px; height:103px; cursor:pointer; }
+.duck { width:76px; height:82px; overflow:visible; filter:drop-shadow(0 2px 0 #fff) drop-shadow(2px 1px 0 #fff) drop-shadow(-2px -1px 0 #fff); }
+.duck-ground { fill:#fffdf5; stroke:#33294b; stroke-width:2; }
+.mascot-badge { position:absolute; left:50%; transform:translateX(-50%); top:81px; border:1.5px solid #33294b; border-radius:6px; background:#fffdf5; color:#33294b; font:900 8px 'Nunito',sans-serif; letter-spacing:.5px; padding:3px 6px; white-space:nowrap; box-shadow:1px 2px 0 #33294b22; }
+.is-parked .duck-ground,.is-stale .duck-ground { stroke-dasharray:3 3; fill:#e8e3ed; }
+.is-estimated .mascot-badge,.is-awaiting .mascot-badge { background:#ffdc62; }
+.is-estimated .duck-ground,.is-awaiting .duck-ground { stroke:#8b67e8; stroke-width:3; stroke-dasharray:3 2; }
+.is-checkpoint .mascot-badge,.is-finished .mascot-badge { background:#d9edbb; }
+.is-stale .mascot-badge { background:#eee5df; }
+.is-estimated .duck-body { transform-origin:38px 70px; animation:waddle .65s ease-in-out infinite alternate; }
+.is-finished .duck-body { transform-origin:38px 70px; animation:finish-bop 1.2s ease-in-out infinite; }
+#follow[aria-pressed=true] { color:#6950a1; background:#ece3fb; }
+@keyframes waddle { from { transform:rotate(-5deg) translateY(-1px); } to { transform:rotate(5deg) translateY(-3px); } }
+@keyframes finish-bop { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-5px); } }
+@media(prefers-reduced-motion:reduce) { .duck-body { animation:none!important; } #progress-fill { transition:none; } }

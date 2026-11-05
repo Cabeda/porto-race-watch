@@ -34,7 +34,7 @@ https://api.tracx.events/v1/web/events/2250
 /participants/{public-participant-id}?include=splits,last_passing
 ```
 
-- Timing mat passings are measured observations. The runner dot between mats is an **estimate**, never labelled live GPS.
+- Timing mat passings are measured observations. The duck between mats is an **estimate**, never labelled live GPS.
 - Estimates use only a valid last passing and the speed attached to it. Scheduled starts and pre-race default speeds do not create movement.
 - Estimates stop just before the next timing checkpoint and require another measured passing to advance. An overdue read returns the marker to the last confirmed checkpoint.
 - Finished, DNS, DNF, disqualified, private and unavailable states are handled without inventing progress.
@@ -59,3 +59,5 @@ Leaflet 1.9.4 is pinned and bundled in `public/vendor` under its BSD 2-Clause li
 - [Public marathon configuration](https://api.tracx.events/v1/web/events/2250/races/6220?include=route,timelines,rankings)
 
 This app sends search queries and participant requests directly to TRACX and map tile requests to OpenStreetMap. It does not run its own analytics or store a runner database.
+
+The original duck mascot uses inline SVG. Its badge distinguishes WAITING (parked at start, no location received), ESTIMATE, AWAITING READ (capped before the next checkpoint), LAST READ (stale), and confirmed reads/finish. Decorative waddling never changes the map position and respects reduced-motion preferences. The course has a contrasting outline and direction arrows.
